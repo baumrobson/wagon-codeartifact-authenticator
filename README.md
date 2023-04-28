@@ -1,0 +1,1 @@
+# mvn-codeartifact-authenticator
