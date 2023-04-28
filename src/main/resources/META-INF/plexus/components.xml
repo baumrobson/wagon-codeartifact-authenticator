@@ -1,0 +1,16 @@
+<component-set>
+    <components>
+      <component>
+        <role>org.apache.maven.wagon.Wagon</role>
+        <role-hint>http</role-hint>
+        <implementation>io.github.baumrobson.wagon.codeartifact.authenticator.CodeArtifactWagon</implementation>
+        <instantiation-strategy>per-lookup</instantiation-strategy>
+      </component>
+      <component>
+        <role>org.apache.maven.wagon.Wagon</role>
+        <role-hint>https</role-hint>
+        <implementation>io.github.baumrobson.wagon.codeartifact.authenticator.CodeArtifactWagon</implementation>
+        <instantiation-strategy>per-lookup</instantiation-strategy>
+      </component>
+    </components>
+</component-set>
