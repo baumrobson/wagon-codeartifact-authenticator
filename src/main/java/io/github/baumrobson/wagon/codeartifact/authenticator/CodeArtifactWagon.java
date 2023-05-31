@@ -11,6 +11,8 @@ public class CodeArtifactWagon extends HttpWagon {
 
 	private AWSCredentialService awsCredentialService = new AWSCredentialService();
 
+	private static final String AWS_USERNAME = "aws";
+
 	private String awsRegion;
 	private String awsAccessKey;
 	private String awsAccessKeySecret;
@@ -21,6 +23,13 @@ public class CodeArtifactWagon extends HttpWagon {
 	public void connect(Repository repository, AuthenticationInfo originAuthenticationInfo,
             ProxyInfoProvider proxyInfoProvider) throws ConnectionException, AuthenticationException
 	{
+		if (originAuthenticationInfo == null ||
+				!AWS_USERNAME.equals(originAuthenticationInfo.getUserName())
+				|| awsAccessKey == null || awsAccessKeySecret == null)
+		{
+			super.connect(repository, originAuthenticationInfo, proxyInfoProvider);
+			return;
+		}
 		AuthenticationInfo authenticationInfo = new AuthenticationInfo();
 		authenticationInfo.setUserName(originAuthenticationInfo.getUserName());
 
@@ -33,10 +42,9 @@ public class CodeArtifactWagon extends HttpWagon {
             }
         }
 
-        if (authenticationInfo.getUserName() != null) {
-    		String authorizationToken = awsCredentialService.getAuthorizationToken(awsRegion, awsAccessKey, awsAccessKeySecret, awsDomainOwner, awsDomain);
-    		authenticationInfo.setPassword(authorizationToken);
-        }
+		String authorizationToken = awsCredentialService.getAuthorizationToken(awsRegion, awsAccessKey, awsAccessKeySecret, awsDomainOwner, awsDomain);
+		authenticationInfo.setPassword(authorizationToken);
+
         super.connect(repository, authenticationInfo, proxyInfoProvider);
 	}
 
